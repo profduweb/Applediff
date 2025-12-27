@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apple, différemment</title>
+    <meta name="description" content="Apple, différemment le podcast Apple pour tous.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --bg-color: #fbfbfd;
+            --text-color: #1d1d1f;
+            --link-color: #0066cc;
+            --border-color: #d2d2d7;
+            --section-bg: #ffffff;
+            --blue-cta: #0071e3;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        body.modal-open {
+            overflow: hidden;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+            transition: opacity 0.2s ease;
+        }
+
+        a:hover {
+            opacity: 0.7;
+        }
+
+        .container {
+            max-width: 980px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 40px;
+            /* Reduced from 60px */
+        }
+
+        /* Header */
+        header {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 24px;
+            margin-bottom: 20px;
+        }
+
+        .logo-frame {
+            width: 280px;
+            /* Increased from 150px */
+            height: 280px;
+            border-radius: 60px;
+            /* Increased for consistent look */
+            overflow: hidden;
+            background-color: #fff;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
+            /* Added prominent shadow */
+        }
+
+        .logo-frame img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        h1 {
+            font-size: 48px;
+            font-weight: 600;
+            letter-spacing: -0.003em;
+        }
+
+        .subtitle {
+            font-size: 21px;
+            font-weight: 400;
+            color: #86868b;
+            max-width: 600px;
+        }
+
+        .subtitle a {
+            color: var(--link-color);
+        }
+
+        /* CTA Button */
+        .main-cta {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background-color: var(--blue-cta);
+            color: #ffffff;
+            font-size: 18px;
+            font-weight: 600;
+            padding: 15px 35px;
+            border-radius: 980px;
+            transition: transform 0.2s ease, background-color 0.2s ease;
+            cursor: pointer;
+            border: none;
+            margin-top: 10px;
+        }
+
+        .main-cta:hover {
+            transform: scale(1.05);
+            background-color: #0077ed;
+        }
+
+        .main-cta i {
+            width: 20px;
+            height: 20px;
+        }
+
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .modal-content {
+            background-color: #fff;
+            width: 90%;
+            max-width: 500px;
+            padding: 40px;
+            border-radius: 30px;
+            position: relative;
+            transform: translateY(20px);
+            transition: transform 0.3s ease;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .modal-overlay.active .modal-content {
+            transform: translateY(0);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .modal-title {
+            font-size: 24px;
+            font-weight: 600;
+        }
+
+        .close-modal {
+            background: #f5f5f7;
+            border: none;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            color: #86868b;
+            transition: background-color 0.2s ease;
+        }
+
+        .close-modal:hover {
+            background-color: #e8e8ed;
+        }
+
+        /* Podcast Links inside Modal */
+        .podcast-links-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .podcast-button {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background-color: #f5f5f7;
+            padding: 16px 20px;
+            border-radius: 16px;
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+        .podcast-button:hover {
+            background-color: #e8e8ed;
+            opacity: 1;
+        }
+
+        .podcast-button i {
+            width: 22px;
+            height: 22px;
+            color: var(--blue-cta);
+        }
+
+        /* Profiles - Compact Layout */
+        .profiles {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            /* Reduced from 40px */
+            width: 100%;
+            max-width: 700px;
+            /* Reduced from 800px */
+        }
+
+        .profile-card {
+            display: flex;
+            flex-direction: row;
+            /* Horizontal on desktop */
+            align-items: center;
+            text-align: left;
+            /* Left align text */
+            gap: 20px;
+            background-color: #fff;
+            padding: 20px;
+            /* Reduced from 40px */
+            border-radius: 20px;
+            border: 1px solid var(--border-color);
+        }
+
+        .profile-img {
+            width: 70px;
+            /* Reduced from 120px */
+            height: 70px;
+            border-radius: 50%;
+            overflow: hidden;
+            object-fit: cover;
+            flex-shrink: 0;
+        }
+
+        .profile-info {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .profile-name {
+            font-size: 18px;
+            /* Reduced from 24px */
+            font-weight: 600;
+        }
+
+        .profile-links {
+            display: flex;
+            gap: 8px;
+        }
+
+        .profile-button {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            border-radius: 8px;
+            background-color: #f5f5f7;
+            font-size: 11px;
+            font-weight: 500;
+        }
+
+        .profile-button i {
+            width: 12px;
+            height: 12px;
+        }
+
+        /* Footer / Social */
+        footer {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            width: 100%;
+            padding-top: 40px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .social-links {
+            display: flex;
+            gap: 20px;
+        }
+
+        .social-link {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            color: #515154;
+        }
+
+        .social-link i {
+            width: 18px;
+            height: 18px;
+        }
+
+        /* Donation */
+        .donation {
+            margin-top: 10px;
+        }
+
+        .donate-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background-color: #FFD60A;
+            color: #000000;
+            font-size: 16px;
+            /* Slightly reduced */
+            font-weight: 600;
+            padding: 12px 30px;
+            border-radius: 980px;
+            transition: transform 0.2s ease;
+        }
+
+        .donate-button:hover {
+            transform: scale(1.05);
+            opacity: 1;
+        }
+
+        .donate-button i {
+            width: 18px;
+            height: 18px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 32px;
+            }
+
+            .logo-frame {
+                width: 200px;
+                height: 200px;
+            }
+
+            .profiles {
+                grid-template-columns: 1fr;
+            }
+
+            .profile-card {
+                padding: 16px;
+            }
+
+            .modal-content {
+                width: 100%;
+                max-width: none;
+                height: 80vh;
+                position: fixed;
+                bottom: 0;
+                border-radius: 30px 30px 0 0;
+                transform: translateY(100%);
+            }
+
+            .modal-overlay.active .modal-content {
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <div class="logo-frame">
+                <img src="assets/img/AD_LOGO_2022.jpg" alt="Logo Apple, différemment">
+            </div>
+            <h1>Apple, différemment</h1>
+            <p class="subtitle">
+                Le podcast Apple pour tous.
+            </p>
+            <button class="main-cta" id="open-modal">
+                <i data-lucide="podcast"></i>
+                Écouter le podcast
+            </button>
+        </header>
+
+        <section class="profiles">
+            <div class="profile-card">
+                <img src="assets/img/audrey.jpg" alt="Audrey Couleau" class="profile-img">
+                <div class="profile-info">
+                    <div class="profile-name">Audrey</div>
+                    <div class="profile-links">
+                        <a href="https://www.appleavecaudrey.fr" class="profile-button">
+                            <i data-lucide="globe"></i>
+                            Site
+                        </a>
+                        <a href="https://www.youtube.com/@AudreyCouleauFormationsApple" class="profile-button">
+                            <i data-lucide="youtube"></i>
+                            YouTube
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="profile-card">
+                <img src="assets/img/mat.jpg" alt="Mat" class="profile-img">
+                <div class="profile-info">
+                    <div class="profile-name">Mat</div>
+                    <div class="profile-links">
+                        <a href="https://profduweb.com" class="profile-button">
+                            <i data-lucide="globe"></i>
+                            Site
+                        </a>
+                        <a href="https://www.youtube.com/channel/UCNzUonmxxvG-HIqOC3S7Thw" class="profile-button">
+                            <i data-lucide="youtube"></i>
+                            YouTube
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <footer style="margin-top: 20px;">
+            <div class="social-links">
+                <a href="https://instagram.com/applediff" class="social-link">
+                    <i data-lucide="instagram"></i>
+                    Instagram
+                </a>
+                <a href="#" class="social-link">
+                    <i data-lucide="at-sign"></i>
+                    Mastodon
+                </a>
+                <a href="https://bsky.app/profile/applediff.bsky.social" class="social-link">
+                    <i data-lucide="cloud"></i>
+                    Bluesky
+                </a>
+            </div>
+            <div class="donation">
+                <a href="https://www.paypal.com/donate/?hosted_button_id=MPGQ5HG2JCM36" class="donate-button">
+                    <i data-lucide="heart"></i>
+                    Faire un don
+                </a>
+            </div>
+            <p style="margin-top: 30px; color: #86868b; font-size: 11px;">&copy; 2025 Apple, différemment. <br> Présenté
+                par Audrey Couleau & Mat.</p>
+        </footer>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal-overlay" id="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Écouter sur...</h2>
+                <button class="close-modal" id="close-modal">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+            <div class="podcast-links-list">
+                <a href="https://itunes.apple.com/fr/podcast/apple-diff%c3%a9remment/id1439580752?mt=2"
+                    class="podcast-button">
+                    <i data-lucide="podcast"></i>
+                    Apple Podcasts
+                </a>
+                <a href="https://open.spotify.com/show/4kfATCRWOjNCGcJrZI0xVI" class="podcast-button">
+                    <i data-lucide="music"></i>
+                    Spotify
+                </a>
+                <a href="https://www.youtube.com/@applediff" class="podcast-button">
+                    <i data-lucide="youtube"></i>
+                    YouTube
+                </a>
+                <a href="https://pca.st/goRv" class="podcast-button">
+                    <i data-lucide="layout-grid"></i>
+                    Pocket Casts
+                </a>
+                <a href="https://overcast.fm/itunes1439580752/apple-diff-remment" class="podcast-button">
+                    <i data-lucide="radio"></i>
+                    Overcast
+                </a>
+                <a href="https://music.amazon.ca/podcasts/64dbba43-ff1b-4713-9922-a168d96761be/apple-diff%C3%A9remment"
+                    class="podcast-button">
+                    <i data-lucide="music-2"></i>
+                    Amazon Music
+                </a>
+                <a href="https://anchor.fm/s/1db32514/podcast/rss" class="podcast-button">
+                    <i data-lucide="rss"></i>
+                    Flux RSS
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize Lucide Icons
+        lucide.createIcons();
+
+        // Modal Logic
+        const openModalBtn = document.getElementById('open-modal');
+        const closeModalBtn = document.getElementById('close-modal');
+        const modalOverlay = document.getElementById('modal-overlay');
+        const body = document.body;
+
+        function openModal() {
+            modalOverlay.classList.add('active');
+            body.classList.add('modal-open');
+        }
+
+        function closeModal() {
+            modalOverlay.classList.remove('active');
+            body.classList.remove('modal-open');
+        }
+
+        openModalBtn.addEventListener('click', openModal);
+        closeModalBtn.addEventListener('click', closeModal);
+
+        // Close modal on click outside content
+        modalOverlay.addEventListener('click', (e) => {
+            if (e.target === modalOverlay) {
+                closeModal();
+            }
+        });
+
+        // Close modal on Escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && modalOverlay.classList.contains('active')) {
+                closeModal();
+            }
+        });
+    </script>
+</body>
+
+</html>
