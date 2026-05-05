@@ -107,8 +107,17 @@
             max-width: 600px;
         }
 
-        .subtitle a {
+        .host-link {
             color: var(--link-color);
+            font-weight: 500;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .host-link:hover {
+            opacity: 1;
+            text-decoration: underline;
+            text-underline-offset: 4px;
         }
 
         /* CTA Button */
@@ -289,6 +298,34 @@
             box-shadow: 0 22px 55px rgba(0, 0, 0, 0.11);
         }
 
+        .profile-modal-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            gap: 18px;
+        }
+
+        .profile-modal-card .profile-img {
+            width: 118px;
+            height: 118px;
+        }
+
+        .profile-modal-card .profile-name {
+            font-size: 30px;
+            line-height: 1.1;
+        }
+
+        .profile-modal-card .profile-links {
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .profile-modal-card .profile-button {
+            font-size: 14px;
+            padding: 10px 16px;
+        }
+
         .profile-img {
             width: 76px;
             height: 76px;
@@ -373,6 +410,12 @@
             height: 18px;
         }
 
+        .instagram-icon {
+            width: 18px;
+            height: 18px;
+            flex-shrink: 0;
+        }
+
         /* Donation */
         .donate-button {
             display: inline-flex;
@@ -444,6 +487,11 @@
             .modal-overlay.active .modal-content {
                 transform: translateY(0);
             }
+
+            .profile-modal-content {
+                height: auto;
+                min-height: 360px;
+            }
         }
     </style>
 </head>
@@ -456,7 +504,10 @@
             </div>
             <h1>Apple, différemment</h1>
             <p class="subtitle">
-                Le podcast Apple pour tous.
+                Le podcast Apple avec
+                <a href="#audrey" class="host-link" data-profile="audrey">Audrey</a>
+                et
+                <a href="#mat" class="host-link" data-profile="mat">Mat</a>.
             </p>
             <div class="header-actions">
                 <button class="main-cta" id="open-modal">
@@ -472,45 +523,15 @@
             </div>
         </header>
 
-        <section class="profiles">
-            <div class="profile-card">
-                <img src="assets/img/audrey.jpg" alt="Audrey Couleau" class="profile-img">
-                <div class="profile-info">
-                    <div class="profile-name">Audrey</div>
-                    <div class="profile-links">
-                        <a href="https://www.appleavecaudrey.fr" class="profile-button">
-                            <i data-lucide="globe"></i>
-                            Site
-                        </a>
-                        <a href="https://www.youtube.com/@AudreyCouleauFormationsApple" class="profile-button">
-                            <i data-lucide="youtube"></i>
-                            YouTube
-                        </a>
-                    </div>
-                </div>
-            </div>
-            <div class="profile-card">
-                <img src="assets/img/mat.jpg" alt="Mat" class="profile-img">
-                <div class="profile-info">
-                    <div class="profile-name">Mat</div>
-                    <div class="profile-links">
-                        <a href="https://profduweb.com" class="profile-button">
-                            <i data-lucide="globe"></i>
-                            Site
-                        </a>
-                        <a href="https://www.youtube.com/channel/UCNzUonmxxvG-HIqOC3S7Thw" class="profile-button">
-                            <i data-lucide="youtube"></i>
-                            YouTube
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </section>
-
         <footer style="margin-top: 20px;">
             <div class="social-links">
                 <a href="https://instagram.com/applediff" class="social-link">
-                    <i data-lucide="instagram"></i>
+                    <svg class="instagram-icon" viewBox="0 0 24 24" aria-hidden="true">
+                        <rect x="3" y="3" width="18" height="18" rx="5" fill="none" stroke="currentColor"
+                            stroke-width="2"></rect>
+                        <circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="2"></circle>
+                        <circle cx="17.4" cy="6.6" r="1.2" fill="currentColor"></circle>
+                    </svg>
                     Instagram
                 </a>
                 <a href="https://www.threads.com/@applediff" class="social-link">
@@ -571,6 +592,22 @@
         </div>
     </div>
 
+    <div class="modal-overlay" id="profile-modal-overlay">
+        <div class="modal-content profile-modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title" id="profile-modal-title">À propos</h2>
+                <button class="close-modal" id="close-profile-modal">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+            <div class="profile-modal-card">
+                <img src="assets/img/audrey.jpg" alt="" class="profile-img" id="profile-modal-img">
+                <div class="profile-name" id="profile-modal-name"></div>
+                <div class="profile-links" id="profile-modal-links"></div>
+            </div>
+        </div>
+    </div>
+
     <script>
         // Initialize Lucide Icons
         lucide.createIcons();
@@ -579,7 +616,35 @@
         const openModalBtn = document.getElementById('open-modal');
         const closeModalBtn = document.getElementById('close-modal');
         const modalOverlay = document.getElementById('modal-overlay');
+        const profileLinks = document.querySelectorAll('[data-profile]');
+        const profileModalOverlay = document.getElementById('profile-modal-overlay');
+        const closeProfileModalBtn = document.getElementById('close-profile-modal');
+        const profileModalTitle = document.getElementById('profile-modal-title');
+        const profileModalImg = document.getElementById('profile-modal-img');
+        const profileModalName = document.getElementById('profile-modal-name');
+        const profileModalLinks = document.getElementById('profile-modal-links');
         const body = document.body;
+
+        const profiles = {
+            audrey: {
+                name: 'Audrey',
+                image: 'assets/img/audrey.jpg',
+                alt: 'Audrey Couleau',
+                links: [
+                    { href: 'https://www.appleavecaudrey.fr', icon: 'globe', label: 'Site' },
+                    { href: 'https://www.youtube.com/@AudreyCouleauFormationsApple', icon: 'youtube', label: 'YouTube' }
+                ]
+            },
+            mat: {
+                name: 'Mat',
+                image: 'assets/img/mat.jpg',
+                alt: 'Mat',
+                links: [
+                    { href: 'https://profduweb.com', icon: 'globe', label: 'Site' },
+                    { href: 'https://www.youtube.com/channel/UCNzUonmxxvG-HIqOC3S7Thw', icon: 'youtube', label: 'YouTube' }
+                ]
+            }
+        };
 
         function openModal() {
             modalOverlay.classList.add('active');
@@ -588,11 +653,51 @@
 
         function closeModal() {
             modalOverlay.classList.remove('active');
-            body.classList.remove('modal-open');
+            if (!profileModalOverlay.classList.contains('active')) {
+                body.classList.remove('modal-open');
+            }
+        }
+
+        function openProfileModal(profileKey) {
+            const profile = profiles[profileKey];
+
+            if (!profile) {
+                return;
+            }
+
+            profileModalTitle.textContent = 'À propos';
+            profileModalImg.src = profile.image;
+            profileModalImg.alt = profile.alt;
+            profileModalName.textContent = profile.name;
+            profileModalLinks.innerHTML = profile.links.map((link) => `
+                <a href="${link.href}" class="profile-button">
+                    <i data-lucide="${link.icon}"></i>
+                    ${link.label}
+                </a>
+            `).join('');
+
+            lucide.createIcons();
+            profileModalOverlay.classList.add('active');
+            body.classList.add('modal-open');
+        }
+
+        function closeProfileModal() {
+            profileModalOverlay.classList.remove('active');
+            if (!modalOverlay.classList.contains('active')) {
+                body.classList.remove('modal-open');
+            }
         }
 
         openModalBtn.addEventListener('click', openModal);
         closeModalBtn.addEventListener('click', closeModal);
+        closeProfileModalBtn.addEventListener('click', closeProfileModal);
+
+        profileLinks.forEach((link) => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                openProfileModal(link.dataset.profile);
+            });
+        });
 
         // Close modal on click outside content
         modalOverlay.addEventListener('click', (e) => {
@@ -601,10 +706,20 @@
             }
         });
 
+        profileModalOverlay.addEventListener('click', (e) => {
+            if (e.target === profileModalOverlay) {
+                closeProfileModal();
+            }
+        });
+
         // Close modal on Escape key
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape' && modalOverlay.classList.contains('active')) {
                 closeModal();
+            }
+
+            if (e.key === 'Escape' && profileModalOverlay.classList.contains('active')) {
+                closeProfileModal();
             }
         });
     </script>
