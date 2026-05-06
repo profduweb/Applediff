@@ -34,9 +34,7 @@
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             min-height: 100vh;
-            background:
-                linear-gradient(180deg, rgba(255, 255, 255, 0.92) 0%, rgba(245, 245, 247, 0.88) 44%, #fbfbfd 100%),
-                url("assets/img/background.jpg") center top / cover fixed;
+            background-color: #F7EEE6;
             color: var(--text-color);
             line-height: 1.5;
             -webkit-font-smoothing: antialiased;
@@ -390,19 +388,6 @@
             gap: 18px;
         }
 
-        .social-card {
-            display: flex;
-            justify-content: center;
-            width: 100%;
-            padding: 16px 20px;
-            background-color: rgba(255, 255, 255, 0.72);
-            border: 1px solid rgba(255, 255, 255, 0.84);
-            border-radius: 8px;
-            box-shadow: var(--soft-shadow);
-            backdrop-filter: blur(18px);
-            -webkit-backdrop-filter: blur(18px);
-        }
-
         .social-link {
             display: flex;
             align-items: center;
@@ -536,30 +521,27 @@
         </header>
 
         <footer style="margin-top: 20px;">
-            <div class="social-card">
-                <div class="social-links">
-                    <a href="https://instagram.com/applediff" class="social-link">
-                        <svg class="instagram-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18"
-                            viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-                            <rect x="3" y="3" width="18" height="18" rx="5" fill="none" stroke="#6e6e73"
-                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                                vector-effect="non-scaling-stroke"></rect>
-                            <circle cx="12" cy="12" r="4" fill="none" stroke="#6e6e73" stroke-width="2"
-                                stroke-linecap="round" stroke-linejoin="round"
-                                vector-effect="non-scaling-stroke"></circle>
-                            <circle cx="17.4" cy="6.6" r="1.2" fill="#6e6e73"></circle>
-                        </svg>
-                        Instagram
-                    </a>
-                    <a href="https://www.threads.com/@applediff" class="social-link">
-                        <i data-lucide="at-sign"></i>
-                        Threads
-                    </a>
-                    <a href="https://bsky.app/profile/applediff.bsky.social" class="social-link">
-                        <i data-lucide="cloud"></i>
-                        Bluesky
-                    </a>
-                </div>
+            <div class="social-links">
+                <a href="https://instagram.com/applediff" class="social-link">
+                    <svg class="instagram-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18"
+                        viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                        <rect x="3" y="3" width="18" height="18" rx="5" fill="none" stroke="#6e6e73"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                            vector-effect="non-scaling-stroke"></rect>
+                        <circle cx="12" cy="12" r="4" fill="none" stroke="#6e6e73" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke"></circle>
+                        <circle cx="17.4" cy="6.6" r="1.2" fill="#6e6e73"></circle>
+                    </svg>
+                    Instagram
+                </a>
+                <a href="https://www.threads.com/@applediff" class="social-link">
+                    <i data-lucide="at-sign"></i>
+                    Threads
+                </a>
+                <a href="https://bsky.app/profile/applediff.bsky.social" class="social-link">
+                    <i data-lucide="cloud"></i>
+                    Bluesky
+                </a>
             </div>
             <p style="margin-top: 30px; color: #86868b; font-size: 11px;">&copy; 2025 Apple, différemment. <br> Présenté
                 par Audrey Couleau & Mat.</p>
