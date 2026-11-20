@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Écoutez les épisodes d’Apple, différemment avec Audrey Couleau et Mat. Retrouvez les anciens épisodes et leurs notes.">
+    <title>Épisodes – Apple, différemment</title>
+    <link rel="canonical" href="https://applediff.com/episodes/">
+    <link rel="icon" type="image/png" href="../assets/img/favicon.png">
+    <link rel="apple-touch-icon" href="../assets/img/apple-touch-icon.png">
+    <link rel="alternate" type="application/rss+xml" title="Apple, différemment" href="https://anchor.fm/s/1db32514/podcast/rss">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="episodes.css">
+    <script src="episodes.js" defer></script>
+</head>
+<body>
+    <header class="masthead page-width">
+        <a class="brand" href="../" aria-label="Apple, différemment – accueil">Apple, différemment</a>
+        <a class="rss-link" href="https://anchor.fm/s/1db32514/podcast/rss">Flux RSS</a>
+    </header>
+
+    <main class="page-width">
+        <h1>Écouter les épisodes</h1>
+
+        <section class="featured" aria-labelledby="featured-title" hidden>
+            <img class="cover" src="../assets/img/pochetteV3.png" width="220" height="220" alt="">
+            <div class="featured-content">
+                <p class="featured-label">Dernier épisode</p>
+                <h2 id="featured-title"></h2>
+                <p id="featured-meta" class="episode-meta"></p>
+                <button id="featured-play" class="play-button primary" type="button">
+                    <span class="play-icon" aria-hidden="true"></span>
+                    <span class="play-label">Écouter l’épisode</span>
+                </button>
+            </div>
+        </section>
+
+        <div id="feed-state">
+            <p id="feed-status" role="status">Chargement des épisodes…</p>
+            <div id="feed-recovery" hidden>
+                <button id="retry" class="play-button" type="button">Réessayer</button>
+                <a href="https://podcasts.apple.com/fr/podcast/apple-diff%C3%A9remment/id1439580752">Ouvrir dans Apple Podcasts</a>
+            </div>
+        </div>
+        <noscript>
+            <p>Activez JavaScript pour utiliser le lecteur ou <a href="https://podcasts.apple.com/fr/podcast/apple-diff%C3%A9remment/id1439580752">écoutez les épisodes dans Apple Podcasts</a>.</p>
+        </noscript>
+
+        <section id="catalog" aria-labelledby="catalog-title" hidden>
+            <div class="catalog-heading">
+                <h2 id="catalog-title">Tous les épisodes</h2>
+                <label class="search">
+                    <span>Rechercher par titre</span>
+                    <input id="search" type="search" placeholder="Ex. iPhone, WWDC…" autocomplete="off">
+                </label>
+            </div>
+            <p id="results" class="episode-meta" role="status"></p>
+            <ul id="episode-list" class="episode-list" role="list"></ul>
+        </section>
+    </main>
+
+    <aside id="player" class="player" aria-label="Lecteur du podcast" hidden>
+        <div class="player-inner page-width">
+            <p id="now-playing" class="now-playing" role="status"></p>
+            <audio id="audio" controls preload="none" aria-label="Lecture de l’épisode"></audio>
+            <button id="close-player" class="close-player" type="button" aria-label="Fermer le lecteur">×</button>
+            <p id="playback-error" class="playback-error" role="status" hidden>
+                La lecture a échoué. <a id="audio-link">Ouvrir le fichier audio</a>
+            </p>
+        </div>
+    </aside>
+
+    <template id="episode-template">
+        <li class="episode">
+            <div class="episode-heading">
+                <div>
+                    <p class="episode-meta"></p>
+                    <h3></h3>
+                </div>
+                <button class="play-button" type="button">
+                    <span class="play-icon" aria-hidden="true"></span>
+                    <span class="play-label">Écouter</span>
+                </button>
+            </div>
+            <details class="episode-notes">
+                <summary>Notes de l’épisode</summary>
+                <div class="notes-content"></div>
+            </details>
+        </li>
+    </template>
+</body>
+</html>
