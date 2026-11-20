@@ -7,6 +7,8 @@ const allowedNotes = new Set(['a', 'b', 'blockquote', 'br', 'em', 'i', 'li', 'ol
 const discardedNotes = new Set(['embed', 'iframe', 'object', 'script', 'style', 'template']);
 
 const featured = document.querySelector('.featured');
+const featuredCover = document.querySelector('#featured-cover');
+const defaultCover = featuredCover.src;
 const featuredPlay = document.querySelector('#featured-play');
 const catalog = document.querySelector('#catalog');
 const list = document.querySelector('#episode-list');
@@ -17,6 +19,8 @@ const feedState = document.querySelector('#feed-state');
 const feedStatus = document.querySelector('#feed-status');
 const feedRecovery = document.querySelector('#feed-recovery');
 const player = document.querySelector('#player');
+const playerCover = document.querySelector('#player-cover');
+const playerStatus = document.querySelector('#player-status');
 const audio = document.querySelector('#audio');
 const nowPlaying = document.querySelector('#now-playing');
 const closePlayer = document.querySelector('#close-player');
@@ -64,10 +68,12 @@ function parseFeed(xml) {
         const published = Date.parse(item.querySelector('pubDate')?.textContent);
         const date = Number.isFinite(published) ? dateFormat.format(published) : '';
         const duration = item.getElementsByTagNameNS(itunesNamespace, 'duration')[0]?.textContent.trim() ?? '';
+        const cover = item.getElementsByTagNameNS(itunesNamespace, 'image')[0]?.getAttribute('href');
         return {
             title,
             searchTitle: normalizeTitle(title),
             source,
+            cover: webUrl(cover),
             published: published || 0,
             metadata: [date, formatDuration(duration)].filter(Boolean).join(' · '),
             notes: item.querySelector('description')?.textContent.trim() ?? '',
@@ -112,6 +118,14 @@ function updatePlayButton(button, episode, idleLabel) {
 function updatePlayerState() {
     if (!episodes.length) return;
 
+    if (currentEpisode) {
+        if (audio.ended) {
+            playerStatus.textContent = 'Épisode terminé';
+        } else {
+            playerStatus.textContent = audio.paused ? 'En pause' : 'En cours d’écoute';
+        }
+    }
+
     updatePlayButton(featuredPlay, episodes[0], 'Écouter l’épisode');
     for (const episode of episodes) {
         episode.row.classList.toggle('is-selected', episode === currentEpisode);
@@ -130,15 +144,20 @@ function togglePlayback(episode, button) {
         currentEpisode = episode;
         audio.src = episode.source;
         audioLink.href = episode.source;
+        playerCover.src = episode.cover || defaultCover;
         nowPlaying.textContent = episode.title;
+        nowPlaying.title = episode.title;
         player.hidden = false;
     }
 
     playbackError.hidden = true;
     if (audio.error) audio.load();
-    audio.play().catch(error => {
+    const playback = audio.play();
+    updatePlayerState();
+    playback.catch(error => {
         if (episode === currentEpisode && error.name !== 'AbortError') {
             playbackError.hidden = false;
+            updatePlayerState();
         }
     });
 }
@@ -178,6 +197,7 @@ function filterEpisodes() {
 
 function showEpisodes() {
     const latest = episodes[0];
+    featuredCover.src = latest.cover || defaultCover;
     document.querySelector('#featured-title').textContent = latest.title;
     document.querySelector('#featured-meta').textContent = latest.metadata;
     list.replaceChildren(...episodes.map(renderEpisode));
@@ -209,6 +229,11 @@ async function loadEpisodes() {
 
 for (const event of ['play', 'pause', 'ended', 'emptied']) {
     audio.addEventListener(event, updatePlayerState);
+}
+for (const cover of [featuredCover, playerCover]) {
+    cover.addEventListener('error', () => {
+        if (cover.src !== defaultCover) cover.src = defaultCover;
+    });
 }
 audio.addEventListener('error', () => {
     if (!currentEpisode) return;

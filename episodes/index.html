@@ -12,8 +12,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="episodes.css">
-    <script src="episodes.js" defer></script>
+    <link rel="stylesheet" href="episodes.css?v=2">
+    <script src="episodes.js?v=2" defer></script>
 </head>
 <body>
     <header class="masthead page-width">
@@ -25,7 +25,7 @@
         <h1>Écouter les épisodes</h1>
 
         <section class="featured" aria-labelledby="featured-title" hidden>
-            <img class="cover" src="../assets/img/pochetteV3.png" width="220" height="220" alt="">
+            <img id="featured-cover" class="cover" src="../assets/img/pochetteV3.png" width="220" height="220" alt="">
             <div class="featured-content">
                 <p class="featured-label">Dernier épisode</p>
                 <h2 id="featured-title"></h2>
@@ -62,8 +62,14 @@
     </main>
 
     <aside id="player" class="player" aria-label="Lecteur du podcast" hidden>
-        <div class="player-inner page-width">
-            <p id="now-playing" class="now-playing" role="status"></p>
+        <div class="player-inner">
+            <div class="player-episode">
+                <img id="player-cover" class="player-cover" src="../assets/img/pochetteV3.png" width="80" height="80" alt="">
+                <div class="player-info">
+                    <p id="player-status" class="player-status"></p>
+                    <p id="now-playing" class="now-playing" role="status"></p>
+                </div>
+            </div>
             <audio id="audio" controls preload="none" aria-label="Lecture de l’épisode"></audio>
             <button id="close-player" class="close-player" type="button" aria-label="Fermer le lecteur">×</button>
             <p id="playback-error" class="playback-error" role="status" hidden>
